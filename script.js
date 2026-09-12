@@ -34,18 +34,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Navbar Scroll Effect
     const navbar = document.getElementById('navbar');
-    
+    let lastScroll = 0;
+
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
+        const currentScroll = window.scrollY;
+
+        if (currentScroll > 50) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
+
+        // Hide on scroll down, show on scroll up
+        if (currentScroll > lastScroll && currentScroll > 100) {
+            navbar.classList.add('nav-hidden');
+        } else {
+            navbar.classList.remove('nav-hidden');
+        }
+        
+        lastScroll = currentScroll;
     });
 
     // 3. Scroll Animations (Fade Up)
     const fadeElements = document.querySelectorAll('.fade-up');
-    
+
     const fadeObserverOptions = {
         root: null,
         threshold: 0.1,
@@ -67,16 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Active Nav Link Update on Scroll
     const sections = document.querySelectorAll('section[id]');
-    
+
     window.addEventListener('scroll', () => {
         let scrollY = window.pageYOffset;
-        
+
         sections.forEach(current => {
             const sectionHeight = current.offsetHeight;
             const sectionTop = current.offsetTop - 100;
             const sectionId = current.getAttribute('id');
             const navLink = document.querySelector(`.nav-links a[href*=${sectionId}]`);
-            
+
             if (navLink && !navLink.classList.contains('btn')) {
                 if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
                     navLink.classList.add('active');
@@ -124,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const galleryItems = document.querySelectorAll('.gallery-item');
     const lightbox = document.getElementById('lightbox');
     const closeLightbox = document.querySelector('.close-lightbox');
-    
+
     if (lightbox && closeLightbox) {
         galleryItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -154,9 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             // Basic validation is handled by HTML5 'required' attributes
-            
+
             // Simulate API call / processing
             const btn = contactForm.querySelector('button[type="submit"]');
             const originalText = btn.innerText;
@@ -167,13 +179,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 contactForm.reset();
                 btn.innerText = originalText;
                 btn.disabled = false;
-                
+
                 formSuccess.style.display = 'block';
-                
+
                 setTimeout(() => {
                     formSuccess.style.display = 'none';
                 }, 5000);
             }, 1500);
         });
     }
+
+    // 8. Parallax Effect for Hero Elements
+    const heroBg = document.getElementById('hero-bg');
+    const parallaxElements = document.querySelectorAll('.parallax-element');
+
+    if (heroBg && parallaxElements.length > 0) {
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth - e.pageX * 2) / 100;
+            const y = (window.innerHeight - e.pageY * 2) / 100;
+
+            parallaxElements.forEach(el => {
+                const speed = parseFloat(el.getAttribute('data-speed')) || 0.05;
+                // Scale down the effect significantly for a subtle liquid glass feel
+                el.style.transform = `translateX(${x * speed * 15}px) translateY(${y * speed * 15}px)`;
+            });
+        });
+    }
+});
+
+window.addEventListener('scroll', () => {
+    const bar = document.getElementById('scrollProgress');
+    const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    if (bar) bar.style.width = scrolled + '%';
 });
