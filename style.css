@@ -898,6 +898,27 @@ p {
     margin-bottom: 1rem;
 }
 
+.dual-avatar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    gap: 10px; /* Add gap for side-by-side spacing */
+}
+
+.dual-avatar .placeholder-avatar {
+    margin-bottom: 0;
+}
+
+.dual-avatar .avatar-left {
+    z-index: 2;
+    position: relative;
+}
+
+.dual-avatar .avatar-right {
+    z-index: 1;
+    position: relative;
+}
+
 .team-card.small .role {
     margin-bottom: 0;
 }
